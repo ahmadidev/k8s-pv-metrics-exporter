@@ -1,0 +1,8 @@
+.gitlab-ci.yml
+.gitignore
+manifests.yaml
+.git
+config
+.vscode
+pv-exporter-chart
+**/*.exe

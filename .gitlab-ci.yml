@@ -1,0 +1,29 @@
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  image: docker:latest
+  only:
+    - main
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+
+deploy:
+  image: 
+    name: $CI_REGISTRY/devops/k8s-util
+    entrypoint: ['']
+  stage: deploy
+  only:
+    - main
+  environment:
+    name: $CI_COMMIT_REF_NAME
+  variables:
+    KUBE_NAMESPACE: "$CI_PROJECT_NAME-$CI_ENVIRONMENT_NAME"
+  script:
+    - echo "Deploying manifests under $KUBE_NAMESPACE namespace"
+    - kubectl version
+    - envsubst < ./manifests.yaml | kubectl apply -f - -n $KUBE_NAMESPACE
