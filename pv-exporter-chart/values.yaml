@@ -23,7 +23,70 @@ rbac:
   ##       - watch
   ##       - update
 
-replicaCount: 1
+serviceMonitor:
+  ## @param metrics.serviceMonitor.enabled Create ServiceMonitor Resource for scraping metrics using Prometheus Operator
+  ##
+  enabled: true
+  ## @param metrics.serviceMonitor.namespace Namespace which Prometheus is running in
+  ##
+  namespace: ""
+  ## @param metrics.serviceMonitor.interval Interval at which metrics should be scraped
+  ##
+  interval: 30s
+  ## @param metrics.serviceMonitor.scrapeTimeout Specify the timeout after which the scrape is ended
+  ## e.g:
+  ## scrapeTimeout: 30s
+  ##
+  scrapeTimeout: ""
+  ## @param metrics.serviceMonitor.relabelings RelabelConfigs to apply to samples before scraping.
+  ##
+  relabelings: []
+  ## @param metrics.serviceMonitor.metricRelabelings MetricsRelabelConfigs to apply to samples before ingestion.
+  ##
+  metricRelabelings: []
+  ## @param metrics.serviceMonitor.labels Used to pass Labels that are used by the Prometheus installed in your cluster to select Service Monitors to work with
+  ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#prometheusspec
+  ##
+  labels: {}
+  ## @param metrics.serviceMonitor.selector Prometheus instance selector labels
+  ## ref: https://github.com/bitnami/charts/tree/main/bitnami/prometheus-operator#prometheus-configuration
+  ##
+  selector: {}
+  ## @param metrics.serviceMonitor.honorLabels Specify honorLabels parameter to add the scrape endpoint
+  ##
+  honorLabels: true
+  ## @param metrics.serviceMonitor.jobLabel The name of the label on the target service to use as the job name in prometheus.
+  ##
+  jobLabel: "jobLabel"
+
+## Custom PrometheusRule to be defined
+## ref: https://github.com/coreos/prometheus-operator#customresourcedefinitions
+##
+prometheusRule:
+  ## @param metrics.prometheusRule.enabled Set this to true to create prometheusRules for Prometheus operator
+  ##
+  enabled: false
+  ## @param metrics.prometheusRule.additionalLabels Additional labels that can be used so prometheusRules will be discovered by Prometheus
+  ##
+  additionalLabels: {}
+  ## @param metrics.prometheusRule.namespace Namespace where prometheusRules resource should be created
+  ##
+  namespace: ""
+  ## @param metrics.prometheusRule.rules Rules to be created, check values for an example
+  ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#rulegroup
+  ##      https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/
+  ##
+  ## This is an example of a rule, you should add the below code block under the "rules" param, removing the brackets
+  ## rules:
+  ## - alert: HighRequestLatency
+  ##   expr: job:request_latency_seconds:mean5m{job="myjob"} > 0.5
+  ##   for: 10m
+  ##   labels:
+  ##     severity: page
+  ##   annotations:
+  ##     summary: High request latency
+  ##
+  rules: []
 
 image:
   repository: localhost:5000/pv-exporter
@@ -58,9 +121,10 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: NodePort
-  nodePort: 60100
+  type: ClusterIP
+  # nodePort: 60100
   port: 9100
+  # clusterIP: "None"
 
 ingress:
   enabled: false

@@ -40,17 +40,17 @@ spec:
             - name: SLEEP_SECONDS
               value: "{{ .Values.sleepSeconds }}"
           ports:
-            - name: http
+            - name: metrics
               containerPort: {{ .Values.service.port }}
               protocol: TCP
           livenessProbe:
             httpGet:
               path: /metrics
-              port: http
+              port: metrics
           readinessProbe:
             httpGet:
               path: /metrics
-              port: http
+              port: metrics
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:

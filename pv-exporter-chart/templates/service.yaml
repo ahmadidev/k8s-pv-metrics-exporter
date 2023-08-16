@@ -2,17 +2,23 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "pv-exporter.fullname" . }}
+  annotations:
+    prometheus.io/scrape: "true"
   labels:
     {{- include "pv-exporter.labels" . | nindent 4 }}
+    jobLabel: pv-exporter
 spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: http
+      targetPort: metrics
       protocol: TCP
-      name: http
-      {{- if and .Values.service.type "NodePort" .Values.service.nodePort }}
+      name: metrics
+      {{- if and (eq .Values.service.type "NodePort") .Values.service.nodePort }}
       nodePort: {{ .Values.service.nodePort }}
+      {{- end }}
+      {{- if and (eq .Values.service.type "ClusterIP") .Values.service.clusterIP }}
+      clusterIP: {{ .Values.service.clusterIP }}
       {{- end }}
   selector:
     {{- include "pv-exporter.selectorLabels" . | nindent 4 }}
