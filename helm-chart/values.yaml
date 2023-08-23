@@ -89,7 +89,7 @@ prometheusRule:
   rules: []
 
 image:
-  repository: localhost:5000/pv-exporter
+  repository: ghcr.io/ahmadidev/k8s-pv-metrics-exporter
   pullPolicy: Always #IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: latest
