@@ -3,7 +3,6 @@
 
 FROM golang:1.19-alpine3.15 AS build
 WORKDIR /app
-ENV https_proxy=http://infra:infra88@192.168.0.182:10811
 COPY go.mod go.sum ./
 RUN go mod download
 COPY main.go ./
