@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  k8s-pv-metrics-exporter:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2023-08-23T19:53:00.874872792+03:30"
+    description: A Prometheus exporter for Kubernetes Persistent Volumes
+    digest: 1b51b3db9ecb261cb5427b1d7d5e50f18b8aa8b94112973814b9b7b49293fde0
+    name: k8s-pv-metrics-exporter
+    type: application
+    urls:
+    - k8s-pv-metrics-exporter-1.0.0.tgz
+    version: 1.0.0
+generated: "2023-08-23T19:53:00.873461263+03:30"
