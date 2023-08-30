@@ -10,7 +10,8 @@
             "request": "launch",
             "mode": "auto",
             "program": "${fileDirname}",
-            "args": ["start"]
+            "args": ["start"],
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }

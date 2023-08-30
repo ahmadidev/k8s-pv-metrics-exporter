@@ -117,8 +117,12 @@ func startDaemon(c *cli.Context) error {
 			fmt.Println("Updating PVs usage:")
 
 			// Use the clientset to retrieve a list of PVs
-			// TODO: Check Bound PVCs
+			// TODO: Check Bound PVs or all?
 			// TODO: Remove removed pvc from metrics
+			// TODO: Filter for local-path storageClass.
+			//		field selector is not available for storageClass, we may use annotation selector for: pv.kubernetes.io/provisioned-by: rancher.io/local-path
+			//		or filter on loop for spec.storageClass
+
 			pvList, err := kubeClient.CoreV1().PersistentVolumes().List(context.Background(), metav1.ListOptions{})
 			if err != nil {
 				fmt.Printf("Failed to retrieve PV list: %v\n", err)
@@ -126,6 +130,10 @@ func startDaemon(c *cli.Context) error {
 			}
 
 			for _, pv := range pvList.Items {
+				if pv.Spec.StorageClassName != "local-path" || pv.Status.Phase != "Bound" {
+					continue
+				}
+
 				capacity, ok := pv.Spec.Capacity[corev1.ResourceName(corev1.ResourceStorage)]
 				if !ok {
 					fmt.Printf("Failed to get PV size\n")
