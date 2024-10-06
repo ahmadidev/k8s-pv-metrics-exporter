@@ -55,11 +55,11 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
           - name: pvs-dir
-            mountPath: /var/lib/rancher/k3s/storage/
+            mountPath: /opt/local-path-provisioner/
       volumes:
       - name: pvs-dir
         hostPath:
-          path: /var/lib/rancher/k3s/storage/
+          path: /opt/local-path-provisioner/
           type: Directory
       {{- with .Values.nodeSelector }}
       nodeSelector:
